@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Music Online</string>
+    <string name="app_name">Music Compose</string>
     <string name="public_">عمومی</string>
     <string name="public_app_notifications">اعلانات عمومی اپلیکیشن</string>
     <string name="copy_to_clipboard">پیام مورد نظر کپی شد</string>
