@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import ir.arash.altafi.musiccompose.ui.component.ImageScreen
 import ir.arash.altafi.musiccompose.ui.presentation.celebrity.CelebrityScreen
+import ir.arash.altafi.musiccompose.ui.presentation.home.HomeScreen
 import ir.arash.altafi.musiccompose.ui.presentation.main.MainScreen
 import ir.arash.altafi.musiccompose.ui.presentation.main.MainScreen2
 import ir.arash.altafi.musiccompose.ui.presentation.paging.PagingScreen
@@ -29,7 +30,7 @@ fun AppNavigation() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Route.Main2,
+                startDestination = Route.Home,
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable<Route.Main> {
@@ -60,6 +61,9 @@ fun AppNavigation() {
                 composable<Route.TestDetail> { backStackEntry: NavBackStackEntry ->
                     val args = backStackEntry.toRoute<Route.TestDetail>()
                     TestDetail(args.userId, navController)
+                }
+                composable<Route.Home> {
+                    HomeScreen(navController)
                 }
             }
         }
