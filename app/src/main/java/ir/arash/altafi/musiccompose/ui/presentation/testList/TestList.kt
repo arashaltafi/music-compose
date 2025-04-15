@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,6 +23,7 @@ import ir.arash.altafi.musiccompose.data.model.TestDetailEntity
 import ir.arash.altafi.musiccompose.ui.base.ApiState
 import ir.arash.altafi.musiccompose.ui.base.BaseScreen
 import ir.arash.altafi.musiccompose.ui.navigation.Route
+import ir.arash.altafi.musiccompose.ui.theme.CustomFont
 
 @Composable
 fun TestList(

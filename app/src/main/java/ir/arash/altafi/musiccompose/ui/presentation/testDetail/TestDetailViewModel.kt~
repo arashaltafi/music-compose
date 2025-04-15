@@ -3,9 +3,9 @@ package ir.arash.altafi.musiccompose.ui.presentation.testDetail
 import androidx.lifecycle.viewModelScope
 import ir.arash.altafi.musiccompose.data.model.TestDetailEntity
 import ir.arash.altafi.musiccompose.data.repository.TestRepository
-import ir.arash.altafi.musiccompose.ui.base.ApiState
-import ir.arash.altafi.musiccompose.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.arash.altafi.musiccompose.ui.base.ApiState
+import ir.arash.altafi.musiccompose.utils.base.BaseViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
