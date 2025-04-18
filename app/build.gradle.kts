@@ -7,7 +7,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
-//    id("com.google.gms.google-services")
+    id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
 }
 
@@ -107,11 +107,11 @@ dependencies {
     implementation(libs.lottie.compose)
 
     // Firebase
-//    implementation(platform(libs.firebase.bom))
-//    implementation(libs.firebase.analytics)
-//    implementation(libs.firebase.messaging)
-//    implementation(libs.firebase.messaging.ktx)
-//    implementation(libs.firebase.common.ktx)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.firebase.common.ktx)
 
     // Tink for encryption
     implementation(libs.tink.android)
