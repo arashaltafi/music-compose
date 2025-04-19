@@ -473,7 +473,7 @@ fun AppNavigation() {
                                             }
                                         },
                                         onClick = {
-                                            if (index != 1) navigationSelectedItem = index
+                                            navigationSelectedItem = index
                                             navController.navigate(navigationItem.route)
                                         },
                                         colors = NavigationBarItemDefaults.colors(
