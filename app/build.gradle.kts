@@ -100,6 +100,15 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     kapt(libs.hilt.android.compiler)
 
+    // Snow Animation
+    implementation(libs.snowfall)
+
+    // Lifecycle & ViewModel
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
