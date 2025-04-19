@@ -90,6 +90,7 @@ import ir.arash.altafi.musiccompose.ui.presentation.user.UserScreen
 import ir.arash.altafi.musiccompose.ui.theme.MusicComposeTheme
 import kotlinx.coroutines.launch
 import ir.arash.altafi.musiccompose.R
+import ir.arash.altafi.musiccompose.ui.component.BackPressHandler
 import ir.arash.altafi.musiccompose.ui.presentation.auth.LoginScreen
 import ir.arash.altafi.musiccompose.ui.presentation.auth.LogoutScreen
 import ir.arash.altafi.musiccompose.ui.presentation.auth.RegisterScreen
@@ -568,6 +569,11 @@ fun AppNavigation() {
                     composable<Route.Profile> {
                         ProfileScreen(navController)
                     }
+                }
+
+                BackPressHandler(navController) { newItem ->
+                    if (currentDestination in allowBottomBar)
+                        navigationSelectedItem = newItem
                 }
             }
         }
