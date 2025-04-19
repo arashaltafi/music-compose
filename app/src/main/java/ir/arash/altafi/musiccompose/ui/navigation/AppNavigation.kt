@@ -329,6 +329,8 @@ fun AppNavigation() {
                                     val title = when {
                                         isHomeScreen -> context.getString(R.string.app_name)
                                         isProfileScreen -> context.getString(R.string.profile)
+                                        isMusicVideoScreen -> context.getString(R.string.music_video)
+                                        isMusicScreen -> context.getString(R.string.music)
                                         else -> context.getString(R.string.app_name)
                                     }
                                     Text(

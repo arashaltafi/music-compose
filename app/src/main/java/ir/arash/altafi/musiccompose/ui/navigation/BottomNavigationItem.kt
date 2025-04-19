@@ -12,15 +12,9 @@ data class BottomNavigationItem(
 fun bottomNavigationItems(): List<BottomNavigationItem> {
     return listOf(
         BottomNavigationItem(
-            label = R.string.profile,
-            icon = R.drawable.profile,
-            route = Route.Profile,
-            badgeCount = 0
-        ),
-        BottomNavigationItem(
-            label = R.string.music_video,
-            icon = R.drawable.music_video,
-            route = Route.MusicVideo,
+            label = R.string.home,
+            icon = R.drawable.home,
+            route = Route.Home,
             badgeCount = 0
         ),
         BottomNavigationItem(
@@ -30,9 +24,15 @@ fun bottomNavigationItems(): List<BottomNavigationItem> {
             badgeCount = 0
         ),
         BottomNavigationItem(
-            label = R.string.home,
-            icon = R.drawable.home,
-            route = Route.Home,
+            label = R.string.music_video,
+            icon = R.drawable.music_video,
+            route = Route.MusicVideo,
+            badgeCount = 0
+        ),
+        BottomNavigationItem(
+            label = R.string.profile,
+            icon = R.drawable.profile,
+            route = Route.Profile,
             badgeCount = 0
         ),
     )

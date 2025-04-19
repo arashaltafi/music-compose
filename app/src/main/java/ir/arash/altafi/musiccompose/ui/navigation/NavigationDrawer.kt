@@ -11,14 +11,9 @@ data class NavigationDrawerItem(
 fun navigationDrawerItems(): List<NavigationDrawerItem> {
     return listOf(
         NavigationDrawerItem(
-            label = R.string.profile,
-            icon = R.drawable.profile,
-            route = Route.Profile,
-        ),
-        NavigationDrawerItem(
-            label = R.string.music_video,
-            icon = R.drawable.music_video,
-            route = Route.MusicVideo,
+            label = R.string.home,
+            icon = R.drawable.home,
+            route = Route.Home,
         ),
         NavigationDrawerItem(
             label = R.string.music,
@@ -26,9 +21,14 @@ fun navigationDrawerItems(): List<NavigationDrawerItem> {
             route = Route.Music,
         ),
         NavigationDrawerItem(
-            label = R.string.home,
-            icon = R.drawable.home,
-            route = Route.Home,
+            label = R.string.music_video,
+            icon = R.drawable.music_video,
+            route = Route.MusicVideo,
+        ),
+        NavigationDrawerItem(
+            label = R.string.profile,
+            icon = R.drawable.profile,
+            route = Route.Profile,
         ),
     )
 }
