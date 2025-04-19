@@ -41,11 +41,12 @@ fun SplashScreen(navController: NavController) {
 
     LaunchedEffect(Unit) {
         delay(2000)
-        navController.navigate(
-            if (token != null && token != "") Route.Home else Route.Login
-        ) {
-            popUpTo("splash") { inclusive = true }
-        }
+        navController.navigate(Route.Home)
+//        navController.navigate(
+//            if (token != null && token != "") Route.Home else Route.Login
+//        ) {
+//            popUpTo("splash") { inclusive = true }
+//        }
     }
 
     Box(

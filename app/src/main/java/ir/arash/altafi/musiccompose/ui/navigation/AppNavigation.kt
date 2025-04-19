@@ -93,6 +93,9 @@ import ir.arash.altafi.musiccompose.R
 import ir.arash.altafi.musiccompose.ui.presentation.auth.LoginScreen
 import ir.arash.altafi.musiccompose.ui.presentation.auth.LogoutScreen
 import ir.arash.altafi.musiccompose.ui.presentation.auth.RegisterScreen
+import ir.arash.altafi.musiccompose.ui.presentation.music.MusicScreen
+import ir.arash.altafi.musiccompose.ui.presentation.musicVideo.MusicVideoScreen
+import ir.arash.altafi.musiccompose.ui.presentation.profile.ProfileScreen
 import ir.arash.altafi.musiccompose.ui.presentation.splash.SplashScreen
 import ir.arash.altafi.musiccompose.ui.presentation.splash.SplashViewModel
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
@@ -553,6 +556,15 @@ fun AppNavigation() {
                     }
                     composable<Route.Logout> {
                         LogoutScreen(navController)
+                    }
+                    composable<Route.Music> {
+                        MusicScreen(navController)
+                    }
+                    composable<Route.MusicVideo> {
+                        MusicVideoScreen(navController)
+                    }
+                    composable<Route.Profile> {
+                        ProfileScreen(navController)
                     }
                 }
             }
