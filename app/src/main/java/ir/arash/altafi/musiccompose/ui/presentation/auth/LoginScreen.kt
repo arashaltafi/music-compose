@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -42,6 +43,8 @@ import kotlin.getValue
 
 @Composable
 fun LoginScreen(navController: NavController) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
     val authViewModel: AuthViewModel = hiltViewModel()
 
 //    val liveLogin by authViewModel.liveLogin.collectAsState()
@@ -206,13 +209,21 @@ fun LoginScreen(navController: NavController) {
                         },
                         singleLine = true,
                         enabled = true,
-                        visualTransformation = VisualTransformation.None,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
-                            Icon(
-                                painter = painterResource(R.drawable.password),
-                                contentDescription = context.getString(R.string.password),
-                                tint = Color.White
-                            )
+                            val icon = if (passwordVisible)
+                                painterResource(R.drawable.visibility)
+                            else
+                                painterResource(R.drawable.visibility_off)
+                            IconButton(
+                                onClick = { passwordVisible = !passwordVisible }
+                            ) {
+                                Icon(
+                                    painter = icon,
+                                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                                    tint = Color.White
+                                )
+                            }
                         },
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.None,
