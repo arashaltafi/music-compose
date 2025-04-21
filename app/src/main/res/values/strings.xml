@@ -13,4 +13,28 @@
     <string name="music">موزیک</string>
     <string name="music_video">موزیک ویدیو</string>
     <string name="profile">پروفایل</string>
+
+    <string name="phone">شماره تلفن</string>
+    <string name="register">ثبت نام</string>
+    <string name="login">ورود</string>
+
+    <string name="name">نام</string>
+    <string name="family">نام خانوادگی</string>
+    <string name="email">ایمیل</string>
+    <string name="password">پسورد</string>
+
+    <string name="email_placeholder">ایمیل خود را وارد نمایید</string>
+    <string name="password_placeholder">پسورد خود را وارد نمایید</string>
+
+    <string name="phone_error">لطفا شماره تلفن را صحیح وارد نمایید</string>
+    <string name="email_error">لطفا ایمیل را صحیح وارد نمایید</string>
+    <string name="max_length_20">لطفا حداکثر 20 کاراکتر وارد نمایید</string>
+    <string name="max_length_30">لطفا حداکثر 30 کاراکتر وارد نمایید</string>
+    <string name="min_length_10">لطفا حداقل 10 کاراکتر وارد نمایید</string>
+    <string name="min_length_6">لطفا حداقل 6 کاراکتر وارد نمایید</string>
+    <string name="min_length_4">لطفا حداقل 4 کاراکتر وارد نمایید</string>
+    <string name="min_length_2">لطفا حداقل 2 کاراکتر وارد نمایید</string>
+    <string name="length_between_6_32">لطفا حداقل 6 و حداکثر 32 کاراکتر وارد نمایید</string>
+    <string name="length_between_2_20">لطفا حداقل 2 و حداکثر 20 کاراکتر وارد نمایید</string>
+    <string name="length_between_4_30">لطفا حداقل 4 و حداکثر 30 کاراکتر وارد نمایید</string>
 </resources>

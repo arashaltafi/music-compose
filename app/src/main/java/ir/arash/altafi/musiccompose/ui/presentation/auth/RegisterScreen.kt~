@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.arash.altafi.musiccompose.R
-import ir.arash.altafi.musiccompose.ui.component.Ltr
 import ir.arash.altafi.musiccompose.ui.component.NetworkConnectivityListener
 import ir.arash.altafi.musiccompose.ui.navigation.Route
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
@@ -40,7 +39,7 @@ import ir.arash.altafi.musiccompose.ui.theme.CustomFont
 @Composable
 fun RegisterScreen(navController: NavController) {
     val authViewModel: AuthViewModel = hiltViewModel()
-//    val liveRegister by authViewModel.liveRegister.collectAsState()
+    val liveRegister by authViewModel.liveRegister.collectAsState()
 
     var isConnected by remember { mutableStateOf(true) }
 
@@ -63,13 +62,13 @@ fun RegisterScreen(navController: NavController) {
         keyboardController?.show()
     }
 
-//    LaunchedEffect(liveRegister) {
-//        liveRegister?.message?.let {
-//            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-//            navController.navigate(Route.Verify(mobile))
-//            authViewModel.resetRegisterState()
-//        }
-//    }
+    LaunchedEffect(liveRegister) {
+        liveRegister?.message?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            navController.navigate(Route.Verify(mobile))
+            authViewModel.resetRegisterState()
+        }
+    }
 
     Box(
         modifier = Modifier
