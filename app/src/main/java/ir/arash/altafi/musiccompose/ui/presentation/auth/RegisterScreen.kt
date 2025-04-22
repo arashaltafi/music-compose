@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -34,8 +35,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ir.arash.altafi.musiccompose.R
 import ir.arash.altafi.musiccompose.ui.component.Ltr
 import ir.arash.altafi.musiccompose.ui.component.NetworkConnectivityListener
-import ir.arash.altafi.musiccompose.ui.navigation.Route
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
+import ir.arash.altafi.musiccompose.utils.ValidationChecker
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -51,9 +52,12 @@ fun RegisterScreen(navController: NavController) {
     val context = LocalContext.current
 
     val focusRequester = remember { FocusRequester() }
-    var mobile by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var family by remember { mutableStateOf("") }
+
+    var passwordVisible by remember { mutableStateOf(false) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -149,7 +153,7 @@ fun RegisterScreen(navController: NavController) {
                     singleLine = true,
                     enabled = true,
                     visualTransformation = VisualTransformation.None,
-                    leadingIcon = {
+                    trailingIcon = {
                         Icon(
                             painter = painterResource(R.drawable.round_person_24),
                             contentDescription = context.getString(R.string.name),
@@ -202,7 +206,7 @@ fun RegisterScreen(navController: NavController) {
                     singleLine = true,
                     enabled = true,
                     visualTransformation = VisualTransformation.None,
-                    leadingIcon = {
+                    trailingIcon = {
                         Icon(
                             painter = painterResource(R.drawable.round_person_24),
                             contentDescription = context.getString(R.string.family),
@@ -222,67 +226,153 @@ fun RegisterScreen(navController: NavController) {
                     )
                 )
 
-                Ltr {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(top = 20.dp)
-                            .width(280.dp),
-                        textStyle = TextStyle(
-                            textAlign = TextAlign.Start,
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .width(280.dp),
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Start,
+                        fontFamily = CustomFont,
+                    ),
+                    value = email,
+                    onValueChange = { newValue ->
+                        email = newValue
+                    },
+                    label = {
+                        Text(
+                            text = context.getString(R.string.email),
+                            fontSize = 12.sp,
                             fontFamily = CustomFont,
-                        ),
-                        value = mobile,
-                        onValueChange = { newValue ->
-                            mobile = newValue
-                        },
-                        label = {
-                            Text(
-                                text = context.getString(R.string.phone),
-                                fontSize = 12.sp,
-                                fontFamily = CustomFont,
-                                color = Color.White
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = "09",
-                                color = Color.White,
-                                modifier = Modifier.fillMaxWidth(),
-                                style = TextStyle(
-                                    textAlign = TextAlign.Start
-                                ),
-                                fontFamily = CustomFont,
-                            )
-                        },
-                        singleLine = true,
-                        enabled = true,
-                        visualTransformation = VisualTransformation.None,
-                        trailingIcon = {
+                            color = Color.White
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = context.getString(R.string.email_placeholder),
+                            color = Color.White,
+                            style = TextStyle(
+                                textAlign = TextAlign.End
+                            ),
+                            fontFamily = CustomFont,
+                        )
+                    },
+                    singleLine = true,
+                    enabled = true,
+                    visualTransformation = VisualTransformation.None,
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.email),
+                            contentDescription = context.getString(R.string.email),
+                            tint = Color.White
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next,
+                        autoCorrect = false
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Next)
+                        }
+                    )
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .width(280.dp),
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Start,
+                        fontFamily = CustomFont,
+                    ),
+                    value = password,
+                    onValueChange = { newValue ->
+                        password = newValue
+                    },
+                    label = {
+                        Text(
+                            text = context.getString(R.string.password),
+                            fontSize = 12.sp,
+                            fontFamily = CustomFont,
+                            color = Color.White
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = context.getString(R.string.password_placeholder),
+                            color = Color.White,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = TextStyle(
+                                textAlign = TextAlign.Start
+                            ),
+                            fontFamily = CustomFont,
+                        )
+                    },
+                    singleLine = true,
+                    enabled = true,
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val icon = if (passwordVisible)
+                            painterResource(R.drawable.visibility)
+                        else
+                            painterResource(R.drawable.visibility_off)
+                        IconButton(
+                            onClick = { passwordVisible = !passwordVisible }
+                        ) {
                             Icon(
-                                painter = painterResource(R.drawable.round_phone_android_24),
-                                contentDescription = context.getString(R.string.phone),
+                                painter = icon,
+                                contentDescription = if (passwordVisible) "Hide password" else "Show password",
                                 tint = Color.White
                             )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.None,
-                            keyboardType = KeyboardType.Phone,
-                            imeAction = ImeAction.Done,
-                            autoCorrect = false,
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
+                        autoCorrect = false,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (ValidationChecker.isValidEmail(email).not()) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.email_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (ValidationChecker.isValidPassword(password).not()) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.password_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (ValidationChecker.isValidName(name).not()) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.name_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (ValidationChecker.isValidName(family).not()) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.family_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
                                 authViewModel.sendRegister(
                                     name = name,
                                     family = family,
-                                    phone = mobile
+                                    email = email,
+                                    password = password,
                                 )
                             }
-                        )
+                        }
                     )
-                }
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -326,11 +416,40 @@ fun RegisterScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        authViewModel.sendRegister(
-                            name = name,
-                            family = family,
-                            phone = mobile
-                        )
+                        if (ValidationChecker.isValidEmail(email).not()) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.email_error),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else if (ValidationChecker.isValidPassword(password).not()) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.password_error),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else if (ValidationChecker.isValidName(name).not()) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.name_error),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else if (ValidationChecker.isValidName(family).not()) {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.family_error),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            keyboardController?.hide()
+                            focusManager.clearFocus()
+                            authViewModel.sendRegister(
+                                name = name,
+                                family = family,
+                                email = email,
+                                password = password,
+                            )
+                        }
                     },
                     modifier = Modifier.width(280.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White)

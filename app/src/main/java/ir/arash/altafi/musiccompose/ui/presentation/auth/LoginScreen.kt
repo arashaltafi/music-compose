@@ -1,7 +1,5 @@
 package ir.arash.altafi.musiccompose.ui.presentation.auth
 
-import android.content.Context
-import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -29,17 +27,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ir.arash.altafi.musiccompose.R
+import ir.arash.altafi.musiccompose.ui.component.Ltr
 import ir.arash.altafi.musiccompose.ui.component.NetworkConnectivityListener
+import ir.arash.altafi.musiccompose.ui.component.Rtl
 import ir.arash.altafi.musiccompose.ui.navigation.Route
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
 import ir.arash.altafi.musiccompose.utils.ValidationChecker
-import kotlin.getValue
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -120,140 +118,137 @@ fun LoginScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(top = 20.dp)
-                            .width(280.dp)
-                            .focusRequester(focusRequester),
-                        textStyle = TextStyle(
-                            textAlign = TextAlign.Start,
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .width(280.dp)
+                        .focusRequester(focusRequester),
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Start,
+                        fontFamily = CustomFont,
+                    ),
+                    value = email,
+                    onValueChange = { newValue ->
+                        email = newValue
+                    },
+                    label = {
+                        Text(
+                            text = context.getString(R.string.email),
+                            fontSize = 12.sp,
                             fontFamily = CustomFont,
-                        ),
-                        value = email,
-                        onValueChange = { newValue ->
-                            email = newValue
-                        },
-                        label = {
-                            Text(
-                                text = context.getString(R.string.email),
-                                fontSize = 12.sp,
-                                fontFamily = CustomFont,
-                                color = Color.White
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = context.getString(R.string.email_placeholder),
-                                color = Color.White,
-                                style = TextStyle(
-                                    textAlign = TextAlign.End
-                                ),
-                                fontFamily = CustomFont,
-                            )
-                        },
-                        singleLine = true,
-                        enabled = true,
-                        visualTransformation = VisualTransformation.None,
-                        trailingIcon = {
+                            color = Color.White
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = context.getString(R.string.email_placeholder),
+                            color = Color.White,
+                            style = TextStyle(
+                                textAlign = TextAlign.End
+                            ),
+                            fontFamily = CustomFont,
+                        )
+                    },
+                    singleLine = true,
+                    enabled = true,
+                    visualTransformation = VisualTransformation.None,
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.email),
+                            contentDescription = context.getString(R.string.email),
+                            tint = Color.White
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next,
+                        autoCorrect = false
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Next)
+                        }
+                    )
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .padding(top = 20.dp)
+                        .width(280.dp),
+                    textStyle = TextStyle(
+                        textAlign = TextAlign.Start,
+                        fontFamily = CustomFont,
+                    ),
+                    value = password,
+                    onValueChange = { newValue ->
+                        password = newValue
+                    },
+                    label = {
+                        Text(
+                            text = context.getString(R.string.password),
+                            fontSize = 12.sp,
+                            fontFamily = CustomFont,
+                            color = Color.White
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = context.getString(R.string.password_placeholder),
+                            color = Color.White,
+                            modifier = Modifier.fillMaxWidth(),
+                            style = TextStyle(
+                                textAlign = TextAlign.Start
+                            ),
+                            fontFamily = CustomFont,
+                        )
+                    },
+                    singleLine = true,
+                    enabled = true,
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val icon = if (passwordVisible)
+                            painterResource(R.drawable.visibility)
+                        else
+                            painterResource(R.drawable.visibility_off)
+                        IconButton(
+                            onClick = { passwordVisible = !passwordVisible }
+                        ) {
                             Icon(
-                                painter = painterResource(R.drawable.email),
-                                contentDescription = context.getString(R.string.email),
+                                painter = icon,
+                                contentDescription = if (passwordVisible) "Hide password" else "Show password",
                                 tint = Color.White
                             )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.None,
-                            keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Next,
-                            autoCorrect = false
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = {
-                                focusManager.moveFocus(FocusDirection.Next)
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done,
+                        autoCorrect = false,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (ValidationChecker.isValidEmail(email).not()) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.email_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (ValidationChecker.isValidPassword(password).not()) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.password_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                                authViewModel.sendLogin(email, password)
                             }
-                        )
+                        }
                     )
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(top = 20.dp)
-                            .width(280.dp)
-                            .focusRequester(focusRequester),
-                        textStyle = TextStyle(
-                            textAlign = TextAlign.Start,
-                            fontFamily = CustomFont,
-                        ),
-                        value = password,
-                        onValueChange = { newValue ->
-                            password = newValue
-                        },
-                        label = {
-                            Text(
-                                text = context.getString(R.string.password),
-                                fontSize = 12.sp,
-                                fontFamily = CustomFont,
-                                color = Color.White
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                text = context.getString(R.string.password_placeholder),
-                                color = Color.White,
-                                modifier = Modifier.fillMaxWidth(),
-                                style = TextStyle(
-                                    textAlign = TextAlign.Start
-                                ),
-                                fontFamily = CustomFont,
-                            )
-                        },
-                        singleLine = true,
-                        enabled = true,
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        trailingIcon = {
-                            val icon = if (passwordVisible)
-                                painterResource(R.drawable.visibility)
-                            else
-                                painterResource(R.drawable.visibility_off)
-                            IconButton(
-                                onClick = { passwordVisible = !passwordVisible }
-                            ) {
-                                Icon(
-                                    painter = icon,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.None,
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done,
-                            autoCorrect = false,
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                if (ValidationChecker.isValidEmail(email).not()) {
-                                    Toast.makeText(
-                                        context,
-                                        context.getString(R.string.email_error),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else if (ValidationChecker.isValidPassword(password).not()) {
-                                    Toast.makeText(
-                                        context,
-                                        context.getString(R.string.length_between_6_32),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    keyboardController?.hide()
-                                    focusManager.clearFocus()
-                                    authViewModel.sendLogin(email, password)
-                                }
-                            }
-                        )
-                    )
-                }
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -306,7 +301,7 @@ fun LoginScreen(navController: NavController) {
                         } else if (ValidationChecker.isValidPassword(password).not()) {
                             Toast.makeText(
                                 context,
-                                context.getString(R.string.length_between_6_32),
+                                context.getString(R.string.password_error),
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {

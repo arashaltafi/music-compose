@@ -28,7 +28,7 @@ class AuthViewModel @Inject constructor(
 
     }
 
-    fun sendRegister(phone: String, name: String, family: String) {
+    fun sendRegister(name: String, family: String, email: String, password: String) {
 
     }
 
