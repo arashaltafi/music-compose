@@ -1,10 +1,14 @@
 package ir.arash.altafi.musiccompose.ui.base
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ir.arash.altafi.musiccompose.data.repository.DataStoreRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -62,6 +66,21 @@ abstract class BaseViewModel<T> : ViewModel() {
                 }
             } catch (e: Exception) {
                 _apiState.value = ApiState.Error(e.localizedMessage ?: "Unknown Error")
+            }
+        }
+    }
+
+    fun <T> callCache(
+        cacheCall: Flow<T>,
+        liveResult: MutableLiveData<T>? = null,
+        onResponse: ((T) -> Unit)? = null,
+    ) {
+        viewModelScope.launch {
+            cacheCall.onStart {
+            }.catch {
+            }.collect { response ->
+                liveResult?.value = response
+                onResponse?.invoke(response)
             }
         }
     }

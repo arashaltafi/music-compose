@@ -120,14 +120,6 @@ fun AppNavigation() {
     val fabVisible by remember { mutableStateOf(true) }
 
     val darkTheme: Boolean = isSystemInDarkTheme()
-    val theme by splashViewModel.cachedTheme.observeAsState()
-
-    LaunchedEffect(theme) {
-        val isDark = if (darkTheme) "dark" else "light"
-        if (theme == "") {
-            splashViewModel.setTheme(isDark)
-        }
-    }
 
     var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
@@ -166,7 +158,7 @@ fun AppNavigation() {
     var isScrolled by remember { mutableStateOf(false) }
 
     MusicComposeTheme(
-        darkTheme = theme == "dark"
+        darkTheme = true //darkTheme
     ) {
         ModalNavigationDrawer(
             gesturesEnabled = currentDestination in allowNavigationBar,
@@ -361,12 +353,11 @@ fun AppNavigation() {
                                 Row {
                                     IconButton(
                                         onClick = {
-                                            splashViewModel.changeTheme()
                                         }
                                     ) {
                                         Icon(
-                                            painter = painterResource(id = if (theme == "dark") R.drawable.round_light_mode_24 else R.drawable.round_dark_mode_24),
-                                            contentDescription = if (theme == "dark") "Switch to Light Theme" else "Switch to Dark Theme",
+                                            painter = painterResource(id = if (darkTheme) R.drawable.round_light_mode_24 else R.drawable.round_dark_mode_24),
+                                            contentDescription = if (darkTheme) "Switch to Light Theme" else "Switch to Dark Theme",
                                             tint = Color.White
                                         )
                                     }
