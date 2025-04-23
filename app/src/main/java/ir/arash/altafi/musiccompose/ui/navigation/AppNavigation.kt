@@ -83,8 +83,6 @@ import ir.arash.altafi.musiccompose.ui.presentation.home.HomeScreen
 import ir.arash.altafi.musiccompose.ui.presentation.main.MainScreen
 import ir.arash.altafi.musiccompose.ui.presentation.main.MainScreen2
 import ir.arash.altafi.musiccompose.ui.presentation.paging.PagingScreen
-import ir.arash.altafi.musiccompose.ui.presentation.testDetail.TestDetail
-import ir.arash.altafi.musiccompose.ui.presentation.testList.TestList
 import ir.arash.altafi.musiccompose.ui.presentation.testPagingList.TestPagingList
 import ir.arash.altafi.musiccompose.ui.presentation.user.UserScreen
 import ir.arash.altafi.musiccompose.ui.theme.MusicComposeTheme
@@ -533,16 +531,13 @@ fun AppNavigation() {
                         val args = backStackEntry.toRoute<Route.ImageScreen>()
                         ImageScreen(navController, args.title, args.imageUrl)
                     }
-                    composable<Route.TestList> {
-                        TestList(navController)
-                    }
                     composable<Route.TestPagingList> {
                         TestPagingList(navController)
                     }
-                    composable<Route.TestDetail> { backStackEntry: NavBackStackEntry ->
-                        val args = backStackEntry.toRoute<Route.TestDetail>()
-                        TestDetail(args.userId, navController)
-                    }
+//                    composable<Route.TestDetail> { backStackEntry: NavBackStackEntry ->
+//                        val args = backStackEntry.toRoute<Route.TestDetail>()
+//                        TestDetail(args.userId, navController)
+//                    }
 
                     composable<Route.Splash> {
                         SplashScreen(navController)
