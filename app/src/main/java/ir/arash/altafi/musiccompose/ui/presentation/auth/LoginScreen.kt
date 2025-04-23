@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ir.arash.altafi.musiccompose.R
+import ir.arash.altafi.musiccompose.ui.base.ApiState
 import ir.arash.altafi.musiccompose.ui.component.Ltr
 import ir.arash.altafi.musiccompose.ui.component.NetworkConnectivityListener
 import ir.arash.altafi.musiccompose.ui.component.Rtl
@@ -44,8 +45,6 @@ fun LoginScreen(navController: NavController) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val authViewModel: AuthViewModel = hiltViewModel()
-
-//    val liveLogin by authViewModel.liveLogin.collectAsState()
 
     var isConnected by remember { mutableStateOf(true) }
 
@@ -67,13 +66,27 @@ fun LoginScreen(navController: NavController) {
         keyboardController?.show()
     }
 
-//    LaunchedEffect(liveLogin) {
-//        liveLogin?.message?.let {
-//            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-//            navController.navigate(Route.Verify(mobile))
-//            authViewModel.resetLoginState()
-//        }
-//    }
+    when (val state = authViewModel.apiState.collectAsState().value) {
+        is ApiState.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is ApiState.Success<*> -> {
+            navController.navigate(Route.Home.route)
+        }
+
+        is ApiState.Error -> Toast.makeText(
+            context,
+            state.message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        is ApiState.Unauthorized -> {
+            navController.navigate(Route.Login.route)
+        }
+
+        else -> Unit
+    }
 
     Box(
         modifier = Modifier
@@ -244,7 +257,7 @@ fun LoginScreen(navController: NavController) {
                             } else {
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
-                                authViewModel.sendLogin(email, password)
+                                authViewModel.onEvent(AuthIntent.Login(email, password))
                             }
                         }
                     )
@@ -307,7 +320,7 @@ fun LoginScreen(navController: NavController) {
                         } else {
                             keyboardController?.hide()
                             focusManager.clearFocus()
-                            authViewModel.sendLogin(email, password)
+                            authViewModel.onEvent(AuthIntent.Login(email, password))
                         }
                     },
                     modifier = Modifier

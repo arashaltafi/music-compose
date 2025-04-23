@@ -33,15 +33,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.arash.altafi.musiccompose.R
-import ir.arash.altafi.musiccompose.ui.component.Ltr
+import ir.arash.altafi.musiccompose.ui.base.ApiState
 import ir.arash.altafi.musiccompose.ui.component.NetworkConnectivityListener
+import ir.arash.altafi.musiccompose.ui.navigation.Route
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
 import ir.arash.altafi.musiccompose.utils.ValidationChecker
 
 @Composable
 fun RegisterScreen(navController: NavController) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
     val authViewModel: AuthViewModel = hiltViewModel()
-//    val liveRegister by authViewModel.liveRegister.collectAsState()
 
     var isConnected by remember { mutableStateOf(true) }
 
@@ -57,8 +59,6 @@ fun RegisterScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
     var family by remember { mutableStateOf("") }
 
-    var passwordVisible by remember { mutableStateOf(false) }
-
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -67,13 +67,27 @@ fun RegisterScreen(navController: NavController) {
         keyboardController?.show()
     }
 
-//    LaunchedEffect(liveRegister) {
-//        liveRegister?.message?.let {
-//            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-//            navController.navigate(Route.Verify(mobile))
-//            authViewModel.resetRegisterState()
-//        }
-//    }
+    when (val state = authViewModel.apiState.collectAsState().value) {
+        is ApiState.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is ApiState.Success<*> -> {
+            navController.navigate(Route.Home.route)
+        }
+
+        is ApiState.Error -> Toast.makeText(
+            context,
+            state.message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        is ApiState.Unauthorized -> {
+            navController.navigate(Route.Login.route)
+        }
+
+        else -> Unit
+    }
 
     Box(
         modifier = Modifier
@@ -363,11 +377,10 @@ fun RegisterScreen(navController: NavController) {
                             } else {
                                 keyboardController?.hide()
                                 focusManager.clearFocus()
-                                authViewModel.sendRegister(
-                                    name = name,
-                                    family = family,
-                                    email = email,
-                                    password = password,
+                                authViewModel.onEvent(
+                                    AuthIntent.Register(
+                                        name, family, email, password
+                                    )
                                 )
                             }
                         }
@@ -443,11 +456,10 @@ fun RegisterScreen(navController: NavController) {
                         } else {
                             keyboardController?.hide()
                             focusManager.clearFocus()
-                            authViewModel.sendRegister(
-                                name = name,
-                                family = family,
-                                email = email,
-                                password = password,
+                            authViewModel.onEvent(
+                                AuthIntent.Register(
+                                    name, family, email, password
+                                )
                             )
                         }
                     },

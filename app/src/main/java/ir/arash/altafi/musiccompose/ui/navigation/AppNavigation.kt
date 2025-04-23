@@ -92,7 +92,6 @@ import kotlinx.coroutines.launch
 import ir.arash.altafi.musiccompose.R
 import ir.arash.altafi.musiccompose.ui.component.BackPressHandler
 import ir.arash.altafi.musiccompose.ui.presentation.auth.LoginScreen
-import ir.arash.altafi.musiccompose.ui.presentation.auth.LogoutScreen
 import ir.arash.altafi.musiccompose.ui.presentation.auth.RegisterScreen
 import ir.arash.altafi.musiccompose.ui.presentation.music.MusicScreen
 import ir.arash.altafi.musiccompose.ui.presentation.musicVideo.MusicVideoScreen
@@ -556,9 +555,6 @@ fun AppNavigation() {
                     }
                     composable<Route.Register> {
                         RegisterScreen(navController)
-                    }
-                    composable<Route.Logout> {
-                        LogoutScreen(navController)
                     }
                     composable<Route.Music> {
                         MusicScreen(navController)
