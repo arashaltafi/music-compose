@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -51,6 +52,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -88,6 +90,7 @@ import ir.arash.altafi.musiccompose.ui.presentation.user.UserScreen
 import ir.arash.altafi.musiccompose.ui.theme.MusicComposeTheme
 import kotlinx.coroutines.launch
 import ir.arash.altafi.musiccompose.R
+import ir.arash.altafi.musiccompose.ui.base.ApiState
 import ir.arash.altafi.musiccompose.ui.component.BackPressHandler
 import ir.arash.altafi.musiccompose.ui.presentation.auth.AuthIntent
 import ir.arash.altafi.musiccompose.ui.presentation.auth.AuthViewModel
@@ -157,6 +160,28 @@ fun AppNavigation() {
     )
 
     var isScrolled by remember { mutableStateOf(false) }
+
+    when (val state = authViewModel.apiState.collectAsState().value) {
+        is ApiState.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is ApiState.Success<*> -> {
+            navController.navigate(Route.Login)
+        }
+
+        is ApiState.Error -> Toast.makeText(
+            context,
+            state.message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        is ApiState.Unauthorized -> {
+            navController.navigate(Route.Login)
+        }
+
+        else -> Unit
+    }
 
     MusicComposeTheme(
         darkTheme = true //darkTheme

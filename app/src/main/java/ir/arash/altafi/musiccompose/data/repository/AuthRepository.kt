@@ -28,7 +28,7 @@ class AuthRepository @Inject constructor(
         return authService.register(RegisterRequest(name, family, email, password))
     }
 
-    suspend fun logoutRequest(token: String): Response<LogoutResponse> {
-        return authService.logout("Bearer $token")
+    suspend fun logoutRequest(): Response<LogoutResponse> {
+        return authService.logout()
     }
 }

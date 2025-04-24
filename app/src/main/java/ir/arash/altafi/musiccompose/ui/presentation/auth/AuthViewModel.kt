@@ -52,10 +52,9 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun performLogout() {
-        val token = dataStore.getTokenString()
         launchApi(
             dataStore = dataStore,
-            apiCall = { authRepository.logoutRequest(token) }
+            apiCall = { authRepository.logoutRequest() }
         ) {
             viewModelScope.launch {
                 dataStore.setToken("")

@@ -56,7 +56,7 @@ object NetworkModule {
                     )
 
                 // only add Authorization if we have a non‐blank token
-                if (token.isNotBlank() && token != "default_value") {
+                if (token.isNotBlank() && token != "default_value" && token != "") {
                     builder.addHeader("Authorization", "Bearer $token")
                 }
 
