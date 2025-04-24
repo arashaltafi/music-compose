@@ -165,7 +165,10 @@ fun AppNavigation() {
         }
 
         is ApiState.Success<*> -> {
-            navController.navigate(Route.Login)
+            navController.navigate(Route.Login) {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
         }
 
         is ApiState.Error -> Toast.makeText(
@@ -175,7 +178,10 @@ fun AppNavigation() {
         ).show()
 
         is ApiState.Unauthorized -> {
-            navController.navigate(Route.Login)
+            navController.navigate(Route.Login) {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
         }
 
         else -> Unit
@@ -393,7 +399,13 @@ fun AppNavigation() {
                                                 } else if (navController.previousBackStackEntry != null) {
                                                     // Pop the backstack if there is a previous route
                                                     navController.popBackStack()
-                                                    navigationSelectedItem = 0
+                                                    navigationSelectedItem = when(navController.currentDestination?.route) {
+                                                        packageName + Route.Home.route -> 0
+                                                        packageName + Route.Music.route -> 1
+                                                        packageName + Route.MusicVideo.route -> 2
+                                                        packageName + Route.Profile.route -> 3
+                                                        else -> 0
+                                                    }
                                                 } else {
                                                     // Handle double back press to exit the app
                                                     if (doubleBackToExitPressedOnce) {

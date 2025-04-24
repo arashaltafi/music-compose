@@ -44,7 +44,7 @@ fun SplashScreen(navController: NavController) {
         navController.navigate(
             if (token != null && token != "" && token != "default_value") Route.Home else Route.Login
         ) {
-            popUpTo("splash") { inclusive = true }
+            popUpTo(navController.graph.id) { inclusive = true }
         }
     }
 

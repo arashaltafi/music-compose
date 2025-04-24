@@ -74,7 +74,10 @@ fun RegisterScreen(navController: NavController) {
         }
 
         is ApiState.Success<*> -> {
-            navController.navigate(Route.Home)
+            navController.navigate(Route.Home) {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
         }
 
         is ApiState.Error -> Toast.makeText(
@@ -84,7 +87,10 @@ fun RegisterScreen(navController: NavController) {
         ).show()
 
         is ApiState.Unauthorized -> {
-            navController.navigate(Route.Login)
+            navController.navigate(Route.Login) {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
         }
 
         else -> Unit
