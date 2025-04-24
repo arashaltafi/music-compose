@@ -14,7 +14,7 @@ import retrofit2.Response
 
 abstract class BaseViewModel<T> : ViewModel() {
 
-    protected val _apiState = MutableStateFlow<ApiState<T>>(ApiState.Loading)
+    protected val _apiState = MutableStateFlow<ApiState<T>>(ApiState.Empty)
     val apiState: StateFlow<ApiState<T>> = _apiState
 
     /**
