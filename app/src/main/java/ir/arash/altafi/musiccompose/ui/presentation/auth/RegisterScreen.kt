@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.arash.altafi.musiccompose.R
 import ir.arash.altafi.musiccompose.ui.base.ApiState
+import ir.arash.altafi.musiccompose.ui.component.LoadingComponent
 import ir.arash.altafi.musiccompose.ui.component.NetworkConnectivityListener
 import ir.arash.altafi.musiccompose.ui.navigation.Route
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
@@ -69,7 +70,7 @@ fun RegisterScreen(navController: NavController) {
 
     when (val state = authViewModel.apiState.collectAsState().value) {
         is ApiState.Loading -> {
-            CircularProgressIndicator()
+            LoadingComponent()
         }
 
         is ApiState.Success<*> -> {

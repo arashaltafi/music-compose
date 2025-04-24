@@ -33,9 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import ir.arash.altafi.musiccompose.R
 import ir.arash.altafi.musiccompose.ui.base.ApiState
-import ir.arash.altafi.musiccompose.ui.component.Ltr
+import ir.arash.altafi.musiccompose.ui.component.LoadingComponent
 import ir.arash.altafi.musiccompose.ui.component.NetworkConnectivityListener
-import ir.arash.altafi.musiccompose.ui.component.Rtl
 import ir.arash.altafi.musiccompose.ui.navigation.Route
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
 import ir.arash.altafi.musiccompose.utils.ValidationChecker
@@ -68,7 +67,7 @@ fun LoginScreen(navController: NavController) {
 
     when (val state = authViewModel.apiState.collectAsState().value) {
         is ApiState.Loading -> {
-            CircularProgressIndicator()
+            LoadingComponent()
         }
 
         is ApiState.Success<*> -> {
