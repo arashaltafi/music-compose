@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import ir.arash.altafi.musiccompose.utils.EncryptionUtils
 import ir.arash.altafi.musiccompose.utils.JsonUtils
+import ir.arash.altafi.musiccompose.utils.base.BaseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class DataStoreRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val encryptionUtils: EncryptionUtils,
-) {
+    private val jsonUtils: JsonUtils
+) : BaseRepository() {
 
     @Inject
     lateinit var jsonUtils1: JsonUtils

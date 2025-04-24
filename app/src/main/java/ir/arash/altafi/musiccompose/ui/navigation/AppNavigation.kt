@@ -89,13 +89,14 @@ import ir.arash.altafi.musiccompose.ui.theme.MusicComposeTheme
 import kotlinx.coroutines.launch
 import ir.arash.altafi.musiccompose.R
 import ir.arash.altafi.musiccompose.ui.component.BackPressHandler
+import ir.arash.altafi.musiccompose.ui.presentation.auth.AuthIntent
+import ir.arash.altafi.musiccompose.ui.presentation.auth.AuthViewModel
 import ir.arash.altafi.musiccompose.ui.presentation.auth.LoginScreen
 import ir.arash.altafi.musiccompose.ui.presentation.auth.RegisterScreen
 import ir.arash.altafi.musiccompose.ui.presentation.music.MusicScreen
 import ir.arash.altafi.musiccompose.ui.presentation.musicVideo.MusicVideoScreen
 import ir.arash.altafi.musiccompose.ui.presentation.profile.ProfileScreen
 import ir.arash.altafi.musiccompose.ui.presentation.splash.SplashScreen
-import ir.arash.altafi.musiccompose.ui.presentation.splash.SplashViewModel
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
 import kotlinx.coroutines.delay
 
@@ -105,7 +106,7 @@ fun AppNavigation() {
     val activity = (context as? Activity)
     val packageName = context.packageName
 
-    val splashViewModel: SplashViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -290,7 +291,7 @@ fun AppNavigation() {
                                     coroutineScope.launch {
                                         drawerState.close()
                                     }
-//                                    authViewModel.sendLogout()
+                                    authViewModel.onEvent(AuthIntent.Logout)
                                 }
                             )
                         }
