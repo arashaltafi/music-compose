@@ -55,8 +55,8 @@ fun LoginScreen(navController: NavController) {
     val context = LocalContext.current
 
     val focusRequester = remember { FocusRequester() }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("arashaltafi1377@gmail.com") }
+    var password by remember { mutableStateOf("123456") }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -72,7 +72,7 @@ fun LoginScreen(navController: NavController) {
         }
 
         is ApiState.Success<*> -> {
-            navController.navigate(Route.Home.route)
+            navController.navigate(Route.Home)
         }
 
         is ApiState.Error -> Toast.makeText(
@@ -82,7 +82,7 @@ fun LoginScreen(navController: NavController) {
         ).show()
 
         is ApiState.Unauthorized -> {
-            navController.navigate(Route.Login.route)
+            navController.navigate(Route.Login)
         }
 
         else -> Unit

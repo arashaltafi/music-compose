@@ -24,7 +24,7 @@ android {
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        buildConfigField("String", "BASE_URL", "\"http://192.168.1.102:5000/\"")
-        buildConfigField("String", "BASE_URL", "\"http://music-back.arashdev.ir/\"")
+        buildConfigField("String", "BASE_URL", "\"https://music-back.arashdev.ir/\"")
     }
 
     buildTypes {

@@ -73,7 +73,7 @@ fun RegisterScreen(navController: NavController) {
         }
 
         is ApiState.Success<*> -> {
-            navController.navigate(Route.Home.route)
+            navController.navigate(Route.Home)
         }
 
         is ApiState.Error -> Toast.makeText(
@@ -83,7 +83,7 @@ fun RegisterScreen(navController: NavController) {
         ).show()
 
         is ApiState.Unauthorized -> {
-            navController.navigate(Route.Login.route)
+            navController.navigate(Route.Login)
         }
 
         else -> Unit

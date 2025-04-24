@@ -1,10 +1,12 @@
 package ir.arash.altafi.musiccompose.ui.presentation.auth
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.arash.altafi.musiccompose.data.repository.AuthRepository
 import ir.arash.altafi.musiccompose.data.repository.DataStoreRepository
 import ir.arash.altafi.musiccompose.ui.base.ApiState
 import ir.arash.altafi.musiccompose.ui.base.BaseViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,9 +28,11 @@ class AuthViewModel @Inject constructor(
             dataStore = dataStore,
             apiCall = { authRepository.loginRequest(email, password) }
         ) { data ->
-            data.accessToken.let {
-                dataStore.setToken(it)
-                _apiState.value = ApiState.Success("Login successfully")
+            viewModelScope.launch {
+                data.accessToken.let {
+                    dataStore.setToken(it)
+                    _apiState.value = ApiState.Success("Login successfully")
+                }
             }
         }
     }
@@ -38,9 +42,11 @@ class AuthViewModel @Inject constructor(
             dataStore = dataStore,
             apiCall = { authRepository.registerRequest(name, family, email, password) }
         ) { data ->
-            data.accessToken.let {
-                dataStore.setToken(it)
-                _apiState.value = ApiState.Success("Registration successfully")
+            viewModelScope.launch {
+                data.accessToken.let {
+                    dataStore.setToken(it)
+                    _apiState.value = ApiState.Success("Registration successfully")
+                }
             }
         }
     }
@@ -51,8 +57,10 @@ class AuthViewModel @Inject constructor(
             dataStore = dataStore,
             apiCall = { authRepository.logoutRequest(token) }
         ) {
-            dataStore.setToken("")
-            _apiState.value = ApiState.Success("Logout successful")
+            viewModelScope.launch {
+                dataStore.setToken("")
+                _apiState.value = ApiState.Success("Logout successful")
+            }
         }
     }
 }
