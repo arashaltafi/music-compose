@@ -11,17 +11,17 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
-    @POST("/api/auth/login")
+    @POST("api/auth/login")
     suspend fun login(
         @Body request: LoginRequest
     ): Response<LoginResponse>
 
-    @POST("/api/auth/register")
+    @POST("api/auth/register")
     suspend fun register(
         @Body request: RegisterRequest
     ): Response<RegisterResponse>
 
-    @POST("/api/auth/logout")
+    @POST("api/auth/logout")
     suspend fun logout(
         @Header("Authorization") bearerToken: String
     ): Response<LogoutResponse>
