@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.arash.altafi.musiccompose.data.api.AuthService
+import ir.arash.altafi.musiccompose.data.api.ProfileService
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -40,5 +41,10 @@ object ServiceModule {
     @Provides
     fun provideAuthService(retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideProfileService(retrofit: Retrofit): ProfileService =
+        retrofit.create(ProfileService::class.java)
 
 }

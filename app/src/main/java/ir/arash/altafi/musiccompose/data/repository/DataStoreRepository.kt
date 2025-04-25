@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import ir.arash.altafi.musiccompose.data.model.UserInfoModel
 import ir.arash.altafi.musiccompose.utils.EncryptionUtils
 import ir.arash.altafi.musiccompose.utils.JsonUtils
 import ir.arash.altafi.musiccompose.utils.base.BaseRepository
@@ -42,8 +43,37 @@ class DataStoreRepository @Inject constructor(
             encryptionUtils.decrypt(preferences[PreferenceKeys.TOKEN] ?: "default_value")
         }
     }
+
+    // info
+    suspend fun setUserInfo(value: UserInfoModel) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.USERINFO] = encryptionUtils.encrypt(jsonUtils.toJson(value))
+        }
+    }
+
+    fun getUserInfo(): Flow<UserInfoModel> {
+        return dataStore.data.map { preferences ->
+            val json =
+                encryptionUtils.decrypt(preferences[PreferenceKeys.USERINFO] ?: "default_value")
+            jsonUtils.getSafeObject<UserInfoModel>(json).getOrElse {
+                UserInfoModel()
+            }
+        }
+    }
+
+    fun getUserInfoResponse(): UserInfoModel {
+        return runBlocking {
+            val json = dataStore.data.map { preferences ->
+                encryptionUtils.decrypt(preferences[PreferenceKeys.USERINFO] ?: "default_value")
+            }.first()
+            jsonUtils.getSafeObject<UserInfoModel>(json).getOrElse {
+                UserInfoModel()
+            }
+        }
+    }
 }
 
 object PreferenceKeys {
     val TOKEN = stringPreferencesKey("user_token")
+    val USERINFO = stringPreferencesKey("user_info")
 }
