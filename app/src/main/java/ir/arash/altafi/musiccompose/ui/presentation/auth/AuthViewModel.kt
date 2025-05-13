@@ -1,27 +1,65 @@
 package ir.arash.altafi.musiccompose.ui.presentation.auth
 
-import ir.arash.altafi.musiccompose.data.repository.DataStoreRepository
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import ir.arash.altafi.musiccompose.data.model.TestDetailEntity
 import ir.arash.altafi.musiccompose.data.repository.AuthRepository
+import ir.arash.altafi.musiccompose.data.repository.DataStoreRepository
+import ir.arash.altafi.musiccompose.ui.base.ApiState
 import ir.arash.altafi.musiccompose.ui.base.BaseViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository,
+    private val dataStore: DataStoreRepository,
     private val authRepository: AuthRepository
-) : BaseViewModel<TestDetailEntity>() {
+) : BaseViewModel<Any>() {
 
-    fun sendLogin(email: String, password: String) {
-
+    fun onEvent(event: AuthIntent) {
+        when (event) {
+            is AuthIntent.Login -> performLogin(event.email, event.password)
+            is AuthIntent.Register -> performRegister(event.name, event.family, event.email, event.password)
+            AuthIntent.Logout -> performLogout()
+        }
     }
 
-    fun sendRegister(name: String, family: String, email: String, password: String) {
-
+    private fun performLogin(email: String, password: String) {
+        launchApi(
+            dataStore = dataStore,
+            apiCall = { authRepository.loginRequest(email, password) }
+        ) { data ->
+            viewModelScope.launch {
+                data.accessToken.let {
+                    dataStore.setToken(it)
+                    _apiState.value = ApiState.Success("Login successfully")
+                }
+            }
+        }
     }
 
-    fun sendLogout() {
+    private fun performRegister(name: String, family: String, email: String, password: String) {
+        launchApi(
+            dataStore = dataStore,
+            apiCall = { authRepository.registerRequest(name, family, email, password) }
+        ) { data ->
+            viewModelScope.launch {
+                data.accessToken.let {
+                    dataStore.setToken(it)
+                    _apiState.value = ApiState.Success("Registration successfully")
+                }
+            }
+        }
+    }
 
+    private fun performLogout() {
+        launchApi(
+            dataStore = dataStore,
+            apiCall = { authRepository.logoutRequest() }
+        ) {
+            viewModelScope.launch {
+                dataStore.setToken("")
+                _apiState.value = ApiState.Success("Logout successful")
+            }
+        }
     }
 }

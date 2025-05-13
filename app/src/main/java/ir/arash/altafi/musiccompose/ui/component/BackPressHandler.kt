@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import ir.arash.altafi.musiccompose.ui.navigation.Route
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -18,6 +19,7 @@ fun BackPressHandler(
     val context = LocalContext.current
     val activity = (context as? Activity)
     val coroutineScope = rememberCoroutineScope()
+    val packageName = context.packageName
 
     // Use BackHandler to intercept the system back press
     BackHandler {
@@ -25,6 +27,15 @@ fun BackPressHandler(
             // Pop the backstack if there is a previous route
             navController.popBackStack()
             onNavigationItemSelected(0)
+            onNavigationItemSelected(
+                when (navController.currentDestination?.route) {
+                    packageName + Route.Home.route -> 0
+                    packageName + Route.Music.route -> 1
+                    packageName + Route.MusicVideo.route -> 2
+                    packageName + Route.Profile.route -> 3
+                    else -> 0
+                }
+            )
         } else {
             // Handle double back press to exit the app
             if (doubleBackToExitPressedOnce) {

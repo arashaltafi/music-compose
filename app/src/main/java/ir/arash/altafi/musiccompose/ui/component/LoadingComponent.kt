@@ -1,11 +1,15 @@
 package ir.arash.altafi.musiccompose.ui.component
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
@@ -18,7 +22,14 @@ fun LoadingComponent(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .zIndex(10f)
+            .clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = {}
+            )
+            .background(color = colorResource(R.color.transparent_black)),
         contentAlignment = Alignment.Center,
     ) {
         Column(

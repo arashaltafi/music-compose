@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import ir.arash.altafi.musiccompose.data.model.UserInfoModel
 import ir.arash.altafi.musiccompose.utils.EncryptionUtils
 import ir.arash.altafi.musiccompose.utils.JsonUtils
 import ir.arash.altafi.musiccompose.utils.base.BaseRepository
@@ -31,41 +32,48 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
+    suspend fun setToken(value: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.TOKEN] = encryptionUtils.encrypt(value)
+        }
+    }
+
     fun getToken(): Flow<String> {
         return dataStore.data.map { preferences ->
             encryptionUtils.decrypt(preferences[PreferenceKeys.TOKEN] ?: "default_value")
         }
     }
 
-    fun setToken(value: String) = callCache {
+    // info
+    suspend fun setUserInfo(value: UserInfoModel) {
         dataStore.edit { preferences ->
-            preferences[PreferenceKeys.TOKEN] = encryptionUtils.encrypt(value)
+            preferences[PreferenceKeys.USERINFO] = encryptionUtils.encrypt(jsonUtils.toJson(value))
         }
     }
 
-    // Theme
-    fun getTheme(): Flow<String> {
+    fun getUserInfo(): Flow<UserInfoModel> {
         return dataStore.data.map { preferences ->
-            preferences[PreferenceKeys.THEME] ?: ""
+            val json =
+                encryptionUtils.decrypt(preferences[PreferenceKeys.USERINFO] ?: "default_value")
+            jsonUtils.getSafeObject<UserInfoModel>(json).getOrElse {
+                UserInfoModel()
+            }
         }
     }
 
-    fun setTheme(theme: String) = callCache {
-        dataStore.edit { preferences ->
-            preferences[PreferenceKeys.THEME] = theme
-        }
-    }
-
-    fun changeTheme() = callCache {
-        dataStore.edit { preferences ->
-            preferences[PreferenceKeys.THEME] =
-                if (preferences[PreferenceKeys.THEME] == "dark") "light" else "dark"
+    fun getUserInfoResponse(): UserInfoModel {
+        return runBlocking {
+            val json = dataStore.data.map { preferences ->
+                encryptionUtils.decrypt(preferences[PreferenceKeys.USERINFO] ?: "default_value")
+            }.first()
+            jsonUtils.getSafeObject<UserInfoModel>(json).getOrElse {
+                UserInfoModel()
+            }
         }
     }
 }
 
 object PreferenceKeys {
     val TOKEN = stringPreferencesKey("user_token")
-    val THEME = stringPreferencesKey("app_theme")
     val USERINFO = stringPreferencesKey("user_info")
 }

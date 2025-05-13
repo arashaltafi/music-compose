@@ -13,7 +13,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ir.arash.altafi.musiccompose.data.api.AuthService
+<<<<<<< HEAD
+=======
 import ir.arash.altafi.musiccompose.data.api.ProfileService
+>>>>>>> 8ac7ca71ac2284b500c009bdd7aeb71893150dee
 import ir.arash.altafi.musiccompose.data.repository.AuthRepository
 import ir.arash.altafi.musiccompose.data.repository.CelebrityRepository
 import ir.arash.altafi.musiccompose.data.repository.DataStoreRepository
@@ -62,6 +65,16 @@ object RepositoryModule {
         celebrityService: CelebrityService,
     ) = CelebrityRepository(celebrityService)
 
+<<<<<<< HEAD
+    @Singleton
+    @Provides
+    fun provideAuthRepository(
+        authService: AuthService,
+    ) = AuthRepository(authService)
+
+    @Provides
+=======
+>>>>>>> 8ac7ca71ac2284b500c009bdd7aeb71893150dee
     @Singleton
     @Provides
     fun provideAuthRepository(

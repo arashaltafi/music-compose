@@ -50,9 +50,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,22 +82,22 @@ import ir.arash.altafi.musiccompose.ui.presentation.home.HomeScreen
 import ir.arash.altafi.musiccompose.ui.presentation.main.MainScreen
 import ir.arash.altafi.musiccompose.ui.presentation.main.MainScreen2
 import ir.arash.altafi.musiccompose.ui.presentation.paging.PagingScreen
-import ir.arash.altafi.musiccompose.ui.presentation.testDetail.TestDetail
-import ir.arash.altafi.musiccompose.ui.presentation.testList.TestList
 import ir.arash.altafi.musiccompose.ui.presentation.testPagingList.TestPagingList
 import ir.arash.altafi.musiccompose.ui.presentation.user.UserScreen
 import ir.arash.altafi.musiccompose.ui.theme.MusicComposeTheme
 import kotlinx.coroutines.launch
 import ir.arash.altafi.musiccompose.R
+import ir.arash.altafi.musiccompose.ui.base.ApiState
 import ir.arash.altafi.musiccompose.ui.component.BackPressHandler
+import ir.arash.altafi.musiccompose.ui.component.LoadingComponent
+import ir.arash.altafi.musiccompose.ui.presentation.auth.AuthIntent
+import ir.arash.altafi.musiccompose.ui.presentation.auth.AuthViewModel
 import ir.arash.altafi.musiccompose.ui.presentation.auth.LoginScreen
-import ir.arash.altafi.musiccompose.ui.presentation.auth.LogoutScreen
 import ir.arash.altafi.musiccompose.ui.presentation.auth.RegisterScreen
 import ir.arash.altafi.musiccompose.ui.presentation.music.MusicScreen
 import ir.arash.altafi.musiccompose.ui.presentation.musicVideo.MusicVideoScreen
 import ir.arash.altafi.musiccompose.ui.presentation.profile.ProfileScreen
 import ir.arash.altafi.musiccompose.ui.presentation.splash.SplashScreen
-import ir.arash.altafi.musiccompose.ui.presentation.splash.SplashViewModel
 import ir.arash.altafi.musiccompose.ui.theme.CustomFont
 import kotlinx.coroutines.delay
 
@@ -108,7 +107,7 @@ fun AppNavigation() {
     val activity = (context as? Activity)
     val packageName = context.packageName
 
-    val splashViewModel: SplashViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -123,14 +122,6 @@ fun AppNavigation() {
     val fabVisible by remember { mutableStateOf(true) }
 
     val darkTheme: Boolean = isSystemInDarkTheme()
-    val theme by splashViewModel.cachedTheme.observeAsState()
-
-    LaunchedEffect(theme) {
-        val isDark = if (darkTheme) "dark" else "light"
-        if (theme == "") {
-            splashViewModel.setTheme(isDark)
-        }
-    }
 
     var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
@@ -168,8 +159,36 @@ fun AppNavigation() {
 
     var isScrolled by remember { mutableStateOf(false) }
 
+    when (val state = authViewModel.apiState.collectAsState().value) {
+        is ApiState.Loading -> {
+            LoadingComponent()
+        }
+
+        is ApiState.Success<*> -> {
+            navController.navigate(Route.Login) {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+
+        is ApiState.Error -> Toast.makeText(
+            context,
+            state.message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+        is ApiState.Unauthorized -> {
+            navController.navigate(Route.Login) {
+                popUpTo(navController.graph.id) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+
+        else -> Unit
+    }
+
     MusicComposeTheme(
-        darkTheme = theme == "dark"
+        darkTheme = true //darkTheme
     ) {
         ModalNavigationDrawer(
             gesturesEnabled = currentDestination in allowNavigationBar,
@@ -301,7 +320,7 @@ fun AppNavigation() {
                                     coroutineScope.launch {
                                         drawerState.close()
                                     }
-//                                    authViewModel.sendLogout()
+                                    authViewModel.onEvent(AuthIntent.Logout)
                                 }
                             )
                         }
@@ -364,12 +383,11 @@ fun AppNavigation() {
                                 Row {
                                     IconButton(
                                         onClick = {
-                                            splashViewModel.changeTheme()
                                         }
                                     ) {
                                         Icon(
-                                            painter = painterResource(id = if (theme == "dark") R.drawable.round_light_mode_24 else R.drawable.round_dark_mode_24),
-                                            contentDescription = if (theme == "dark") "Switch to Light Theme" else "Switch to Dark Theme",
+                                            painter = painterResource(id = if (darkTheme) R.drawable.round_light_mode_24 else R.drawable.round_dark_mode_24),
+                                            contentDescription = if (darkTheme) "Switch to Light Theme" else "Switch to Dark Theme",
                                             tint = Color.White
                                         )
                                     }
@@ -381,7 +399,13 @@ fun AppNavigation() {
                                                 } else if (navController.previousBackStackEntry != null) {
                                                     // Pop the backstack if there is a previous route
                                                     navController.popBackStack()
-                                                    navigationSelectedItem = 0
+                                                    navigationSelectedItem = when(navController.currentDestination?.route) {
+                                                        packageName + Route.Home.route -> 0
+                                                        packageName + Route.Music.route -> 1
+                                                        packageName + Route.MusicVideo.route -> 2
+                                                        packageName + Route.Profile.route -> 3
+                                                        else -> 0
+                                                    }
                                                 } else {
                                                     // Handle double back press to exit the app
                                                     if (doubleBackToExitPressedOnce) {
@@ -534,16 +558,13 @@ fun AppNavigation() {
                         val args = backStackEntry.toRoute<Route.ImageScreen>()
                         ImageScreen(navController, args.title, args.imageUrl)
                     }
-                    composable<Route.TestList> {
-                        TestList(navController)
-                    }
                     composable<Route.TestPagingList> {
                         TestPagingList(navController)
                     }
-                    composable<Route.TestDetail> { backStackEntry: NavBackStackEntry ->
-                        val args = backStackEntry.toRoute<Route.TestDetail>()
-                        TestDetail(args.userId, navController)
-                    }
+//                    composable<Route.TestDetail> { backStackEntry: NavBackStackEntry ->
+//                        val args = backStackEntry.toRoute<Route.TestDetail>()
+//                        TestDetail(args.userId, navController)
+//                    }
 
                     composable<Route.Splash> {
                         SplashScreen(navController)
@@ -556,9 +577,6 @@ fun AppNavigation() {
                     }
                     composable<Route.Register> {
                         RegisterScreen(navController)
-                    }
-                    composable<Route.Logout> {
-                        LogoutScreen(navController)
                     }
                     composable<Route.Music> {
                         MusicScreen(navController)
