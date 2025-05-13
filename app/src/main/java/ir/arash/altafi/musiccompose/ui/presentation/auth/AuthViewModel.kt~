@@ -8,7 +8,7 @@ import ir.arash.altafi.musiccompose.data.repository.AuthRepository
 import ir.arash.altafi.musiccompose.ui.base.BaseViewModel
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+class TestDetailViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
     private val authRepository: AuthRepository
 ) : BaseViewModel<TestDetailEntity>() {
